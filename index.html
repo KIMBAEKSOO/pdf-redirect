@@ -5,16 +5,21 @@
     <title>PDF Redirector</title>
 </head>
 <body>
+    <h2 style="text-align: center; margin-top: 50px;">PDF 연결 중...</h2>
     <script>
-        // Extract target URL from query parameters
         const urlParams = new URLSearchParams(window.location.search);
         const target = urlParams.get('url');
         
         if(target) {
-            // Redirect to the target URL
+            // 1. 로컬 PDF 프로그램 호출
             window.location.href = target;
-            // Close the tab after 100ms
-            setTimeout(() => window.close(), 3000); 
+            
+            // 2. 탭 닫기 로직 보강
+            setTimeout(() => {
+                // 부모 창(구글독스)이 아닌 '현재 탭'만 확실히 지칭하여 닫기
+                window.open('', '_self', ''); 
+                window.close();
+            }, 1000); // 1초 뒤 자동 종료 (항상허용 체크 완료 기준)
         }
     </script>
 </body>
