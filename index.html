@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>PDF Redirector</title>
+</head>
+<body>
+    <script>
+        // Extract target URL from query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const target = urlParams.get('url');
+        
+        if(target) {
+            // Redirect to the target URL
+            window.location.href = target;
+            // Close the tab after 100ms
+            setTimeout(() => window.close(), 100); 
+        }
+    </script>
+</body>
+</html>
