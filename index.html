@@ -2,46 +2,32 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>PDF Redirector</title>
-    <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f4f4f4; }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin-bottom: 20px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .container { text-align: center; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    </style>
+    <title>PDF Connector</title>
 </head>
 <body>
-    <div class="container">
-        <div class="loader" style="margin: 0 auto 20px;"></div>
-        <h2>PDF 연결 중...</h2>
-        <p>프로그램 실행 후 이 탭은 자동으로 닫힙니다.</p>
-    </div>
-
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const target = urlParams.get('url');
         
         if (target) {
-            // 1. 현재 페이지의 히스토리를 조작하여 '닫기' 명령이 독스에 영향을 주지 않도록 함
-            // 로컬 프로그램을 호출 (이 시점에 브라우저 팝업이 뜸)
-            window.location.href = target;
-            
-            // 2. 충분한 시간을 두고 탭 종료 시도
-            // '항상 허용'이 되어 있다면 1초면 충분하고, 아니라면 사용자가 클릭할 시간을 줍니다.
+            // 핵심: 현재 페이지를 이동시키는 대신, iframe을 생성하여 신호만 보냄
+            // 이렇게 하면 '현재 탭'은 아무런 페이지 이동이 발생하지 않습니다.
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = target;
+            document.body.appendChild(iframe);
+
+            // 신호를 보낸 후 0.5초 뒤에 현재 창을 닫음
+            // (구글 독스에서 새 탭으로 열렸을 경우 그 새 탭만 자폭)
             setTimeout(() => {
-                // 브라우저에게 이 창은 스크립트로 열린 창임을 다시 한번 강조하고 닫기
-                if (window.opener) {
-                    // 새 탭으로 열린 것이 확실할 때
-                    window.close();
-                } else {
-                    // 브라우저 정책 우회용 강제 닫기
-                    window.open('', '_self', '');
-                    window.close();
-                }
-            }, 1500); 
-        } else {
-            document.body.innerHTML = "<h2>잘못된 접근입니다.</h2>";
+                window.open('', '_self', '');
+                window.close();
+            }, 500);
         }
     </script>
+    <div style="text-align: center; padding-top: 20px;">
+        <h3>PDF 프로그램을 호출 중입니다...</h3>
+        <p>연결 후 이 창은 자동으로 닫힙니다.</p>
+    </div>
 </body>
 </html>
