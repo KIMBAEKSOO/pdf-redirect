@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>PDF Connector</title>
+    <title>PDF Link</title>
 </head>
 <body>
     <script>
@@ -10,24 +10,21 @@
         const target = urlParams.get('url');
         
         if (target) {
-            // 핵심: 현재 페이지를 이동시키는 대신, iframe을 생성하여 신호만 보냄
-            // 이렇게 하면 '현재 탭'은 아무런 페이지 이동이 발생하지 않습니다.
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = target;
-            document.body.appendChild(iframe);
+            // 핵심: 페이지 자체를 이동하지 않고 프로토콜만 호출
+            // 브라우저는 URL이 바뀌지 않았다고 판단하여 독스 탭을 유지합니다.
+            location.replace(target);
 
-            // 신호를 보낸 후 0.5초 뒤에 현재 창을 닫음
-            // (구글 독스에서 새 탭으로 열렸을 경우 그 새 탭만 자폭)
+            // 0.5초 뒤에 이전 페이지(구글 독스)로 강제 복귀
+            // 만약 새 탭으로 열렸다면 이 명령은 무시되거나 빈 창으로 남습니다.
             setTimeout(() => {
-                window.open('', '_self', '');
-                window.close();
+                if (history.length > 1) {
+                    history.back();
+                } else {
+                    // 새 탭인 경우 그냥 '연결 완료' 메시지만 띄우고 멈춤 (닫지 않음)
+                    document.body.innerHTML = "<h2 style='text-align:center; margin-top:50px;'>PDF 연결 완료. 이 창을 닫으셔도 됩니다.</h2>";
+                }
             }, 500);
         }
     </script>
-    <div style="text-align: center; padding-top: 20px;">
-        <h3>PDF 프로그램을 호출 중입니다...</h3>
-        <p>연결 후 이 창은 자동으로 닫힙니다.</p>
-    </div>
 </body>
 </html>
