@@ -4,25 +4,26 @@
     <meta charset="UTF-8">
     <title>PDF Link</title>
 </head>
-<body style="background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;">
+<body>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const target = urlParams.get('url');
         
         if (target) {
-            // 1. 즉시 프로토콜 호출 (지연 없음)
-            location.href = target;
+            // 핵심: 페이지 자체를 이동하지 않고 프로토콜만 호출
+            // 브라우저는 URL이 바뀌지 않았다고 판단하여 독스 탭을 유지합니다.
+            location.replace(target);
 
-            // 2. 아주 짧은 찰나(0.1초)만 대기 후 상태 변경
+            // 0.5초 뒤에 이전 페이지(구글 독스)로 강제 복귀
+            // 만약 새 탭으로 열렸다면 이 명령은 무시되거나 빈 창으로 남습니다.
             setTimeout(() => {
-                if (window.history.length > 1) {
-                    // 구글 독스 탭에서 그대로 열렸다면 즉시 뒤로가기
-                    window.history.back();
+                if (history.length > 1) {
+                    history.back();
                 } else {
-                    // 새 탭으로 열렸다면 즉시 완료 메시지 표시
-                    document.body.innerHTML = "<div style='text-align:center; font-family:sans-serif;'><h2>✅ 연결 완료</h2><p>이 창은 닫으셔도 됩니다.</p></div>";
+                    // 새 탭인 경우 그냥 '연결 완료' 메시지만 띄우고 멈춤 (닫지 않음)
+                    document.body.innerHTML = "<h2 style='text-align:center; margin-top:50px;'>PDF 연결 완료. 이 창을 닫으셔도 됩니다.</h2>";
                 }
-            }, 100); 
+            }, 500);
         }
     </script>
 </body>
