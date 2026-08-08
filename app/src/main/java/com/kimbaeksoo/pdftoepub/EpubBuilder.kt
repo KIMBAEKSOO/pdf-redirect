@@ -79,13 +79,15 @@ class EpubBuilder(private val title: String, private val chapters: List<PdfChapt
               <manifest>
                 <item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
                 <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
-${manifestItems}
+                __MANIFEST_ITEMS__
               </manifest>
               <spine toc="ncx">
-${spineItems}
+                __SPINE_ITEMS__
               </spine>
             </package>
         """.trimIndent()
+            .replace("__MANIFEST_ITEMS__", manifestItems)
+            .replace("__SPINE_ITEMS__", spineItems)
     }
 
     private fun navXhtml(): String {
@@ -100,12 +102,13 @@ ${spineItems}
               <nav epub:type="toc" id="toc">
                 <h1>${escapeXml(title)}</h1>
                 <ol>
-${links}
+                __LINKS__
                 </ol>
               </nav>
             </body>
             </html>
         """.trimIndent()
+            .replace("__LINKS__", links)
     }
 
     private fun tocNcx(): String {
@@ -125,10 +128,11 @@ ${links}
               </head>
               <docTitle><text>${escapeXml(title)}</text></docTitle>
               <navMap>
-${navPoints}
+                __NAV_POINTS__
               </navMap>
             </ncx>
         """.trimIndent()
+            .replace("__NAV_POINTS__", navPoints)
     }
 
     private fun chapterXhtml(chapter: PdfChapter): String {
@@ -143,10 +147,11 @@ ${navPoints}
             <head><title>${escapeXml(chapter.title)}</title></head>
             <body>
               <h2>${escapeXml(chapter.title)}</h2>
-${paragraphs}
+              __PARAGRAPHS__
             </body>
             </html>
         """.trimIndent()
+            .replace("__PARAGRAPHS__", paragraphs)
     }
 
     private fun escapeXml(text: String): String = text
