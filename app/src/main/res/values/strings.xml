@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">PDF → EPUB 변환기</string>
+    <string name="select_pdf">PDF 파일 선택</string>
+    <string name="convert">EPUB로 변환</string>
+    <string name="no_file_selected">선택된 파일 없음</string>
+    <string name="status_idle">PDF 파일을 선택해 주세요.</string>
+    <string name="status_extracting">PDF 텍스트를 추출하는 중… (%1$d / %2$d 페이지)</string>
+    <string name="status_building_epub">EPUB 파일을 생성하는 중…</string>
+    <string name="status_done">변환 완료: %1$s</string>
+    <string name="status_error">오류: %1$s</string>
+    <string name="save_epub_as">EPUB 저장 위치 선택</string>
+</resources>
